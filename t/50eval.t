@@ -1,8 +1,8 @@
 # -*- perl -*-
 
 use strict;
-require SQL::Statement;
-require SQL::Eval;
+use SQL::Statement ();
+use SQL::Eval ();
 
 
 $| = 1;
@@ -149,7 +149,7 @@ sub Test($) {
 }
 
 
-print "1..80\n";
+print "1..103\n";
 
 my($parser);
 Test($parser = SQL::Parser->new('Ansi'));
@@ -166,7 +166,7 @@ Test($db->{'foo'}->column_num('id') eq 0);
 Test($db->{'foo'}->column_num('name') eq 1);
 Test(!defined($db->{'foo'}->column_num('nosuchcolumn')));
 
-
+print "Inserting some data.\n";
 Test($stmt = MyStatement->new("INSERT INTO foo VALUES (?, ?)", $parser));
 Test($stmt->execute($db, [1, 'Tim Bunce']));
 Test($stmt = MyStatement->new("INSERT INTO foo (id, name) VALUES (?, ?)",
@@ -179,6 +179,7 @@ Test($stmt->execute($db, ['Andreas Koenig', 2]));
 Test(@{$db->{'foo'}->{'DATA'}} == 4);
 
 
+print "Retrieving the same data, ordered by id.\n";
 Test($stmt = MyStatement->new("SELECT * FROM foo ORDER BY id"));
 Test($stmt->execute($db));
 Test(ArrEq($stmt->{'data'},
@@ -228,6 +229,7 @@ Test($stmt->execute($db));
 Test(ArrEq($stmt->{'data'}, [ [ 4, 'Jochen Wiedmann' ] ]));
 
 
+print "Selecting by column names.\n";
 Test($stmt = MyStatement->new("SELECT name, id FROM foo ORDER BY id"));
 Test($stmt->execute($db));
 Test(ArrEq($stmt->{'data'},
@@ -236,6 +238,7 @@ Test(ArrEq($stmt->{'data'},
 	     [ 'Jonathan Leffler', 3 ],
 	     [ 'Jochen Wiedmann', 4 ] ]));
 
+print "Selecting names only, ordered by name.\n";
 Test($stmt = MyStatement->new("SELECT name FROM foo ORDER BY name DESC"));
 Test($stmt->execute($db));
 Test(ArrEq($stmt->{'data'},
@@ -243,6 +246,25 @@ Test(ArrEq($stmt->{'data'},
 	     [ 'Jonathan Leffler' ],
 	     [ 'Jochen Wiedmann' ],
 	     [ 'Andreas Koenig' ] ]));
+
+print "Selecting names only, ordered by id, ascending.\n";
+Test($stmt = MyStatement->new("SELECT name FROM foo ORDER BY id"));
+Test($stmt->execute($db));
+Test(ArrEq($stmt->{'data'},
+	   [ [ 'Tim Bunce' ],
+	     [ 'Andreas Koenig' ],
+	     [ 'Jonathan Leffler' ],
+	     [ 'Jochen Wiedmann' ] ]));
+
+print "Selecting names only, ordered by id, descending.\n";
+Test($stmt = MyStatement->new("SELECT name FROM foo ORDER BY id DESC"));
+Test($stmt->execute($db));
+Test(ArrEq($stmt->{'data'},
+	   [ [ 'Jochen Wiedmann' ],
+	     [ 'Jonathan Leffler' ],
+	     [ 'Andreas Koenig' ],
+	     [ 'Tim Bunce' ] ]));
+
 
 Test($stmt = MyStatement->new("SELECT id FROM foo WHERE id > 2 ORDER BY id"));
 Test($stmt->execute($db));
@@ -298,3 +320,24 @@ Test($stmt = MyStatement->new("SELECT n1, n2 FROM foo WHERE n1 = n2"));
 Test($stmt->execute($db));
 #Test(ArrEq($stmt->{'data'},
 #	   [ [ "4", "04" ] ]));
+
+
+print "Joel's stuff...\n";
+Test($stmt = MyStatement->new("DROP TABLE foo"));
+Test($stmt->execute($db));
+Test($stmt = MyStatement->new("CREATE TABLE foo (name CHAR(64))",
+                              $parser));
+Test($stmt->execute($db));
+Test($stmt = MyStatement->new("INSERT INTO foo VALUES (?)", $parser));
+Test($stmt->execute($db, ['Tim Bunce']));
+Test($stmt->execute($db, ['Jochen Wiedmann']));
+Test($stmt->execute($db, ['Joel Meulenberg']));
+Test($stmt = MyStatement->new("SELECT * FROM foo WHERE name LIKE '%berg'"));
+Test($stmt->execute($db));
+Test(ArrEq($stmt->{'data'}, [ ['Joel Meulenberg' ] ]));
+Test($stmt = MyStatement->new("SELECT * FROM foo WHERE name LIKE '%ber'"));
+Test($stmt->execute($db));
+Test(!ArrEq($stmt->{'data'}, [ ['Joel Meulenberg' ] ]));
+Test($stmt = MyStatement->new("SELECT * FROM foo WHERE name LIKE 'Joel Meu'"));
+Test($stmt->execute($db));
+Test(!ArrEq($stmt->{'data'}, [ ['Joel Meulenberg' ] ]));

@@ -70,7 +70,7 @@ int SQL_Statement_Like(const char* s1, int l1, const char* s2, int l2,
 	    return 0;
 	}
     }
-    return l2 == 0;
+    return l1 == 0;
 }
 
 

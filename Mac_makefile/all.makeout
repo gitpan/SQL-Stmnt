@@ -69,10 +69,11 @@ MWLinkPPC -xm library -sym on -o Statement.Lib.PPC :Obj:alloca.c.PPC.o :Obj:sql_
  ::::miniperl -I::::lib: ::::lib:ExtUtils:xsubpp Statement.xs > xstmp.c
  Rename -y xstmp.c :Statement.c
  Set Echo 0
- If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c" != "" É End
-  MWCPPC -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -traceback -opt all -t -ext .PPC.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c -o :Obj:
+ If " :alloca.c :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c" != "" É End
+  MWCPPC -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -traceback -opt all -t -ext .PPC.o :alloca.c :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c -o :Obj:
+Time to compile 'alloca.c': 0.05 seconds
 Time to compile 'alloca.c': 0.03 seconds
-Time to compile 'sql_yacc.c': 0.95 seconds
+Time to compile 'sql_yacc.c': 1.10 seconds
 Time to compile 'sql_data.c': 0.07 seconds
 Time to compile 'sql_op.c': 0.10 seconds
 ### MWCPPC Compiler Warning:
@@ -89,7 +90,7 @@ File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # 
 #----------------------------------------------------------
 File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
 #----------------------------------------------------------
-Time to compile 'Statement.c': 2.52 seconds
+Time to compile 'Statement.c': 3.15 seconds
   end
  ::::miniperl "-I::::lib:" -e 'use ExtUtils::Mksymlists; Mksymlists("NAME" => "SQL::Statement", "DL_FUNCS" => {  }, "DL_VARS" => []);'
   ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' PPC
@@ -97,10 +98,10 @@ Time to compile 'Statement.c': 2.52 seconds
  Set Echo 0
  If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c" != "" É End
   MWC68K -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -indirect -mc68020 -model CFMflatdf -pragma "export on" -model far -opt off -t -ext .CFM68K.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c -o :Obj:
-Time to compile 'alloca.c': 0.03 seconds
-Time to compile 'sql_yacc.c': 0.27 seconds
+Time to compile 'alloca.c': 0.05 seconds
+Time to compile 'sql_yacc.c': 0.30 seconds
 Time to compile 'sql_data.c': 0.05 seconds
-Time to compile 'sql_op.c': 0.08 seconds
+Time to compile 'sql_op.c': 0.10 seconds
 ### MWC68K Compiler Warning:
 #	typedef int ssize_t;  /* count of bytes or error indication */
 #	                   ^
@@ -115,7 +116,7 @@ File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # 
 #----------------------------------------------------------
 File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
 #----------------------------------------------------------
-Time to compile 'Statement.c': 1.77 seconds
+Time to compile 'Statement.c': 1.93 seconds
   end
   ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' 68K
   ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep($_ !~ /$pat/, @ARGV)), "\"\n";' '68K|PPC'
@@ -123,10 +124,10 @@ Time to compile 'Statement.c': 1.77 seconds
  Set Echo 0
  If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c" != "" É End
   MWC68K -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -mc68020 -model far -opt all -t -ext .68K.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c -o :Obj:
-Time to compile 'alloca.c': 0.03 seconds
-Time to compile 'sql_yacc.c': 1.80 seconds
-Time to compile 'sql_data.c': 0.07 seconds
-Time to compile 'sql_op.c': 0.10 seconds
+Time to compile 'alloca.c': 0.02 seconds
+Time to compile 'sql_yacc.c': 1.72 seconds
+Time to compile 'sql_data.c': 0.05 seconds
+Time to compile 'sql_op.c': 0.12 seconds
 ### MWC68K Compiler Warning:
 #	typedef int ssize_t;  /* count of bytes or error indication */
 #	                   ^
@@ -141,7 +142,7 @@ File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # 
 #----------------------------------------------------------
 File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
 #----------------------------------------------------------
-Time to compile 'Statement.c': 2.52 seconds
+Time to compile 'Statement.c': 2.02 seconds
   end
  MWLink68K -xm library -sym on -o Statement.Lib.68K :Obj:alloca.c.68K.o :Obj:sql_yacc.c.68K.o :Obj:sql_data.c.68K.o :Obj:sql_op.c.68K.o :Obj:Statement.c.68K.o
  MWLink68K -xm library -model CFMflatdf -sym on -o Statement.Lib.CFM68K :Obj:alloca.c.CFM68K.o :Obj:sql_yacc.c.CFM68K.o :Obj:sql_data.c.CFM68K.o :Obj:sql_op.c.CFM68K.o :Obj:Statement.c.CFM68K.o
@@ -149,9 +150,9 @@ Time to compile 'Statement.c': 2.52 seconds
  If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c" != "" É End
   MWC68K -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -model far -opt all -t -ext .680.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c -o :Obj:
 Time to compile 'alloca.c': 0.02 seconds
-Time to compile 'sql_yacc.c': 1.73 seconds
-Time to compile 'sql_data.c': 0.05 seconds
-Time to compile 'sql_op.c': 0.10 seconds
+Time to compile 'sql_yacc.c': 1.70 seconds
+Time to compile 'sql_data.c': 0.07 seconds
+Time to compile 'sql_op.c': 0.12 seconds
 ### MWC68K Compiler Warning:
 #	typedef int ssize_t;  /* count of bytes or error indication */
 #	                   ^
@@ -166,7 +167,7 @@ File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # 
 #----------------------------------------------------------
 File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
 #----------------------------------------------------------
-Time to compile 'Statement.c': 1.97 seconds
+Time to compile 'Statement.c': 2.17 seconds
   end
  MWLink68K -xm library -sym on -o Statement.Lib.680 :Obj:alloca.c.680.o :Obj:sql_yacc.c.680.o :Obj:sql_data.c.680.o :Obj:sql_op.c.680.o :Obj:Statement.c.680.o
  MWLinkPPC -xm library -sym on -o Statement.Lib.PPC :Obj:alloca.c.PPC.o :Obj:sql_yacc.c.PPC.o :Obj:sql_data.c.PPC.o :Obj:sql_op.c.PPC.o :Obj:Statement.c.PPC.o

@@ -1,3 +1,11 @@
+1999-03-03  Jochen Wiedmann  <joe@ispsoft.de> (0.1011)
+
+	* lib/SQL/Statement.pm (SELECT): Added the ability to order by
+	  columns that are not part of the selected data; Joel Meulenberg
+	  <joelmeulenberg@yahoo.com>.
+	* sql_data.c: Fixed a bug in LIKE and CLIKE; Joel Meulenberg
+	  <joelmeulenberg@yahoo.com>.
+
 1999-02-13  Jochen Wiedmann  <joe@ispsoft.de> (0.1010)
 
 	* sql_yacc.y: Fixed a bug in the parser, that caused mixed

@@ -10,7 +10,7 @@ package SQL::Statement;
 
 use vars qw($VERSION @ISA);
 
-$VERSION = '0.1010';
+$VERSION = '0.1011';
 @ISA = qw(DynaLoader);
 
 bootstrap SQL::Statement $VERSION;
@@ -173,88 +173,95 @@ sub SELECT ($$) {
     my($eval) = $self->open_tables($data, 0, 0);
     $eval->params($params);
     $self->verify_columns($eval, $data);
-    my($numFields) = 0;
-    my($column);
-    foreach $column ($self->columns()) {
-	if (ref($column)  &&  $column->name() ne '*') {
-	    ++$numFields;
-	} else {
-	    $numFields += @{$eval->table($column->table())->col_names()};
-	}
-    }
-    my($tableName) = $self->tables(0)->name();
-    my($table) = $eval->table($tableName);
-    my($rows, $array);
-    $rows = [];
+    my $tableName = $self->tables(0)->name();
+    my $table = $eval->table($tableName);
+    my $rows = [];
 
-    #
-    #  Build a list of columns to retrieve; this will be used both
-    #  for fetching the rows and for sorting
-    #
+    # In a loop, build the list of columns to retrieve; this will be
+    # used both for fetching data and ordering.
     my($cList, $col, $tbl, $ar, $i, $c);
-    foreach $column ($self->columns()) {
+    my $numFields = 0;
+    my %columns;
+    my @names;
+    foreach my $column ($self->columns()) {
 	($col, $tbl) = ($column->name(), $column->table());
 	if ($col eq '*') {
 	    $ar = $table->col_names();
 	    for ($i = 0;  $i < @$ar;  $i++) {
+		my $cName = $ar->[$i];
+		$columns{$tbl}->{$cName} = $numFields++;
 		$c = SQL::Statement::Column->new({'table' => $tableName,
-						  'column' => $ar->[$i]});
-		push(@$cList, [$c, $i]);
+						  'column' => $cName});
+		push(@$cList, $i);
+		push(@names, $cName);
 	    }
 	} else {
-	    push(@$cList, [$column, $table->column_num($col)]);
+	    $columns{$tbl}->{$col} = $numFields++;
+	    push(@$cList, $table->column_num($col));
+	    push(@names, $col);
 	}
     }
-    $self->{'NAME'} = $cList;
+    $self->{'NAME'} = \@names;
 
-    while ($array = $table->fetch_row($data)) {
+    my @order_by = $self->order();
+    my @extraSortCols;
+    if (@order_by) {
+	my $nFields = $numFields;
+	# It is possible that the user gave an ORDER BY clause with columns
+	# that are not part of $cList yet.
+	# from $cList).  These columns will need to be present in the
+	# array of arrays for sorting, but will be stripped off later.
+	foreach my $column (@order_by) {
+	    ($col, $tbl) = ($column->column(), $column->table());
+	    next if exists($columns{$tbl}->{$col});
+	    push(@extraSortCols, $table->column_num($col));
+	    $columns{$tbl}->{$col} = $nFields++;
+	}
+    }
+
+    while (my $array = $table->fetch_row($data)) {
 	if ($self->eval_where($eval)) {
-	    my($row) = [];
-	    foreach $column (@$cList) {
-		push(@$row, $array->[$column->[1]]);
-	    }
-	    push(@$rows, $row);
+	    # Note we also include the columns from @extraSortCols that
+	    # have to be ripped off later!
+	    my @row = map { $array->[$_] } (@$cList, @extraSortCols);
+	    push(@$rows, \@row);
 	}
     }
 
-    if ($self->order()) {
-	my(@sortCols, $i);
-	foreach $column ($self->order()) {
-	    for ($i = 0;  $i < @$cList;  $i++) {
-		my($col) = $cList->[$i]->[0];
-		if ($col->table() eq $column->table()  &&
-		    $col->name() eq $column->column()) {
-		    push(@sortCols, $i, $column->desc());
-		    last;
+    if (@order_by) {
+	my @sortCols = map {
+	    ($columns{$_->table()}->{$_->column()}, $_->desc())
+	} @order_by;
+	my($c, $d, $result, $colNum, $desc);
+	@$rows = sort {
+	    $i = 0;
+	    do {
+		$colNum = $sortCols[$i++];
+		$desc = $sortCols[$i++];
+		$c = $a->[$colNum];
+		$d = $b->[$colNum];
+		if (!defined($c)) {
+		    $result = -1;
+		} elsif (!defined($d)) {
+		    $result = 1;
+		} elsif ($c =~ /^\s*[+-]?\s*\.?\s*\d/  &&
+			 $d =~ /^\s*[+-]?\s*\.?\s*\d/) {
+		    $result = ($c <=> $d);
+		} else {
+		    $result = $c cmp $d;
 		}
-	    }
-	}
+		if ($desc) {
+		    $result = -$result;
+		}
+	    } while ($result == 0  &&  $i < @sortCols);
+	    $result;
+	} @$rows;
 
-	if (@sortCols) {
-	    my($c, $d, $result, $colNum, $desc);
-	    @$rows = sort {
-		$i = 0;
-		do {
-		    $colNum = $sortCols[$i++];
-		    $desc = $sortCols[$i++];
-		    $c = $a->[$colNum];
-		    $d = $b->[$colNum];
-		    if (!defined($c)) {
-			$result = -1;
-		    } elsif (!defined($d)) {
-			$result = 1;
-		    } elsif ($c =~ /^\s*[+-]?\s*\.?\s*\d/  &&
-			     $d =~ /^\s*[+-]?\s*\.?\s*\d/) {
-			$result = ($c <=> $d);
-		    } else {
-			$result = $c cmp $d;
-		    }
-		    if ($desc) {
-			$result = -$result;
-		    }
-		} while ($result == 0  &&  $i < @sortCols);
-		$result;
-	    } @$rows;
+	# Rip off columns that have been added for @extraSortCols only
+	if (@extraSortCols) {
+	    foreach my $row (@$rows) {
+		splice(@$row, $numFields, scalar(@extraSortCols));
+	    }
 	}
     }
 
