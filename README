@@ -1,4 +1,4 @@
-Thursday, March 18, 1999
+Tuesday, June 1, 1999
 
 This is the SQL::Statement module with shared libraries compiled for 
 MacPerl.  Shared libraries run only on PPC and CFM68K versions, not 
@@ -14,7 +14,7 @@ MPW port of patch.
 Best installed using cpan-mac, either with the CPAN shell,
 or the installme droplet.  From the CPAN shell, type:
 
-    cpan> install CNANDOR/SQL-Stmnt-0.1011-bin-1-Mac.tgz
+    cpan> install CNANDOR/SQL-Stmnt-0.1012-bin-1-Mac.tgz
 
 Also, see the MMP page:
 

@@ -4,6 +4,7 @@
 #include <EXTERN.h>
 #include <perl.h>
 #include <XSUB.h>
+#include "ppport.h"
 #include "sql_data.h"
 
 
@@ -20,6 +21,8 @@ typedef struct {
 
 
 static sql_stmt_t* SV2stmt(SV* self) {
+    static STRLEN lna;
+
     if (SvOK(self)  &&  SvROK(self)
 	&& sv_derived_from(self, "SQL::Statement")) {
         HV* hv = (HV*) SvRV(self);
@@ -33,7 +36,7 @@ static sql_stmt_t* SV2stmt(SV* self) {
 	}
     }
 
-    croak("%s is not a valid SQL::Statement object", SvPV(self, na));
+    croak("%s is not a valid SQL::Statement object", SvPV(self, lna));
 }
 
 
@@ -80,7 +83,7 @@ static SV* SqlObject(SV* stmtSV, sql_stmt_t* stmt, void* obj, int type) {
 	}
       default:
       case SQL_STATEMENT_TYPE_NULL:
-	return &sv_undef;
+	return &PL_sv_undef;
       case SQL_STATEMENT_TYPE_OP:
 	{
 	    HV* hv = newHV();
@@ -112,7 +115,7 @@ static SV* SqlObject(SV* stmtSV, sql_stmt_t* stmt, void* obj, int type) {
 		sv = newSVpv(val->data.col.table.ptr,
 			     val->data.col.table.len);
 	    } else {
-	        sv = &sv_undef;
+	        sv = &PL_sv_undef;
 	    }
 	    hv_store(hv, "table", 5, sv, 0);
 	    if (val->data.col.column.ptr) {
@@ -373,7 +376,7 @@ static AV* str2array(SV* sv) {
 	    av_push(av, col);
 	    break;
 	  case 0x02:
-	    av_push(av, &sv_undef);
+	    av_push(av, &PL_sv_undef);
 	    ++i;
 	    break;
 	  default:
@@ -402,6 +405,7 @@ new(self, statement, parser=NULL)
 	SV* rv;
 	HV* hv;
 	HV* stash;
+	STRLEN lna;
 
 	if (!(stmt = malloc(sizeof(*stmt)))) {
 	    croak("Out of memory");
@@ -416,7 +420,7 @@ new(self, statement, parser=NULL)
 	    stmt->parser = &sqlEvalParser;
 	} else if (!SvROK(parser)  || !sv_derived_from(parser, "SQL::Parser")
 		   ||  !SvIOK(SvRV(parser))) {
-	    croak("%s is not a valid SQL::Parser object", SvPV(parser, na));
+	    croak("%s is not a valid SQL::Parser object", SvPV(parser, lna));
 	} else {
 	   stmt->parser = (sql_parser_t*) SvIV(SvRV(parser));
 	}
@@ -437,7 +441,7 @@ new(self, statement, parser=NULL)
 	if (SvROK(self)) {
 	    stash = SvSTASH(SvRV(self));
 	} else {
-	    stash = gv_stashpv(SvPV(self, na), TRUE);
+	    stash = gv_stashpv(SvPV(self, lna), TRUE);
 	}
 	RETVAL = sv_bless(rv, stash);
     }
@@ -581,7 +585,7 @@ row_values(self, rval=NULL)
 		EXTEND(sp, num);
 		for (i = 0;  i < num;  i++) {
 		    if (rv->val == -1) {
-		        ST(i) = &sv_undef;
+		        ST(i) = &PL_sv_undef;
 		    } else {
 		        ST(i) = sv_2mortal(SqlObject(self, stmt,
 						     ((sql_val_t*) stmt->values.data)
@@ -718,7 +722,9 @@ where(self)
   CODE:
     {
         sql_stmt_t* stmt = SV2stmt(self);
-	if (stmt->command != SQL_STATEMENT_COMMAND_SELECT) {
+	if (stmt->command != SQL_STATEMENT_COMMAND_SELECT  &&
+	    stmt->command != SQL_STATEMENT_COMMAND_UPDATE  &&
+	    stmt->command != SQL_STATEMENT_COMMAND_DELETE) {
 	    XSRETURN_UNDEF;
 	}
 	RETVAL = SqlObject(self, stmt,
@@ -857,11 +863,12 @@ dup(class, name=NULL)
         sql_parser_t* parser;
 	sql_parser_t* dup;
 	HV* stash;
+	STRLEN lna;
 
 	if (SvROK(class)) {
 	    stash = SvSTASH(SvRV(class));
 	} else {
-	    stash = gv_stashpv(SvPV(class, na), TRUE);
+	    stash = gv_stashpv(SvPV(class, lna), TRUE);
 	}
         if (!name  ||  strEQ(name, "Ansi")) {
 	    parser = &ansiParser;
@@ -884,9 +891,11 @@ DESTROY(self)
   PROTOTYPE: $
   PPCODE:
     {
+        STRLEN lna;
+
         if (!SvOK(self)  ||  !SvROK(self)  ||
 	    !sv_derived_from(self, "SQL::Parser")  ||  !SvIOK(SvRV(self))) {
-	    croak("%s is not a valid SQL::Parser object", SvPV(self, na));
+	    croak("%s is not a valid SQL::Parser object", SvPV(self, lna));
 	}
 	Safefree((sql_parser_t*) SvIV(SvRV(self)));
     }
@@ -906,10 +915,11 @@ feature(self, set, f, val=NULL)
 	char* fName = SvPV(f, fLen);
 	char* fPtr = NULL;
 	sql_parser_t* parser;
+	STRLEN lna;
 
         if (!SvOK(self)  ||  !SvROK(self)  ||
 	    !sv_derived_from(self, "SQL::Parser")  ||  !SvIOK(SvRV(self))) {
-	    croak("%s is not a valid SQL::Parser object", SvPV(self, na));
+	    croak("%s is not a valid SQL::Parser object", SvPV(self, lna));
 	}
 	parser = (sql_parser_t*) SvIV(SvRV(self));
 

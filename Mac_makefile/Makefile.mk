@@ -1,7 +1,7 @@
 # This Makefile is for the SQL::Statement extension to perl.
 #
 # It was generated automatically by MakeMaker version
-# 0.1011 (Revision: ) from the contents of
+# 0.1012 (Revision: ) from the contents of
 # Makefile.PL. Don't edit this file, edit Makefile.PL instead.
 #
 #	ANY CHANGES MADE HERE WILL BE LOST!
@@ -19,9 +19,9 @@
 NAME = SQL::Statement
 DISTNAME = SQL-Statement
 NAME_SYM = SQL_Statement
-VERSION = 0.1011
-VERSION_SYM = 0_1011
-XS_VERSION = 0.1011
+VERSION = 0.1012
+VERSION_SYM = 0_1012
+XS_VERSION = 0.1012
 INST_LIB = ::::lib
 INST_ARCHLIB = ::::lib
 PERL_LIB = ::::lib
@@ -51,7 +51,8 @@ DEFINE =
 # Handy lists of source code files:
 XS_FILES= Statement.xs
 C_FILES = alloca.c sql_yacc.c sql_data.c sql_op.c
-H_FILES = sql_data.h \
+H_FILES = ppport.h \
+	sql_data.h \
 	sql_yacc.h
 
 

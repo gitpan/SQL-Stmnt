@@ -1,5 +1,6 @@
 ChangeLog
 MANIFEST			This file
+MANIFEST.SKIP
 Makefile.PL			Makefile generator
 README				Module description
 lib/SQL/Eval.pm			Perl module for deriving SQL engines
@@ -8,6 +9,7 @@ lib/SQL/Statement/Hash.pm	Fragment of a hash based SQL engine
 Statement.xs			XS part of the module
 doc/sql-92.bnf			BNF grammar of ANSI SQL
 doc/sql-92.unimplemented        Unimplemented parts of the above grammar
+ppport.h
 sql_data.c			C part of the module
 sql_data.h
 sql_op.c
