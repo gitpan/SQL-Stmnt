@@ -1,3 +1,9 @@
+1999-02-13  Jochen Wiedmann  <joe@ispsoft.de> (0.1010)
+
+	* sql_yacc.y: Fixed a bug in the parser, that caused mixed
+	  AND/OR conditions to fail. Thanks to Joel Meulenberg
+	  <joelmeulenberg@yahoo.com>.
+
 1998-10-26  Jochen Wiedmann  <joe@ispsoft.de> (0.1009)
 
 	* lib/SQL/Statement.pm (SELECT): lockMode was set to 1, thus

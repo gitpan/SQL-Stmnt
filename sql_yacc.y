@@ -407,7 +407,7 @@ opt_having:
 
 conditional_expression:
   conditional_term
-  | conditional_expression OR conditional_factor
+  | conditional_expression OR conditional_term
     { sql_op_t o;
       o.arg1 = $1;
       o.opNum = SQL_STATEMENT_OPERATOR_OR;

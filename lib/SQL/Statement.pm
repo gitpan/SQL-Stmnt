@@ -10,7 +10,7 @@ package SQL::Statement;
 
 use vars qw($VERSION @ISA);
 
-$VERSION = '0.1009';
+$VERSION = '0.1010';
 @ISA = qw(DynaLoader);
 
 bootstrap SQL::Statement $VERSION;

@@ -1,0 +1,131 @@
+Set Echo 1
+::::InstallBLIB "SQL::Statement" "::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);'" :lib:SQL:Eval.pm 	:lib:SQL:Statement.pm 	:lib:SQL:Statement:Hash.pm Statement.xs
+Set Echo 0
+Set SrcPPC "{SrcPPC} :sql_yacc.c"
+Set Echo 1
+If "{SrcPPC}" != "" 
+MWCPPC -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:"  -i :::: -i- -i : -w nopossible -traceback -opt all -t -ext .PPC.o {SrcPPC} -o :Obj:
+End
+MWLinkPPC -xm sharedlibrary -sym on -msg nodup -@export Statement.exp -name Statement -o Statement.shlb.PPC :Obj:alloca.c.PPC.o :Obj:sql_yacc.c.PPC.o :Obj:sql_data.c.PPC.o :Obj:sql_op.c.PPC.o :Obj:Statement.c.PPC.o ::::PerlStub 								{MWPPCLibraries}InterfaceLib 						{MWPPCLibraries}MathLib 							"Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:"ShLibRuntime.Lib 				"Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:ANSI (NL) C.PPC.Lib"	    	"Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:MWCRuntime.Lib" `::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' PPC `
+Set Echo 0
+Set SrcCFM68K "{SrcCFM68K} :sql_yacc.c"
+Set Echo 1
+If "{SrcCFM68K}" != "" 
+MWC68K -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:"  -i :::: -i- -i : -w nopossible -indirect -mc68020 -model CFMflatdf -pragma "export on" -model far -opt off -t -ext .CFM68K.o {SrcCFM68K} -o :Obj:
+End
+MWLink68K -xm sharedlibrary -sym on -msg nodup -@export Statement.exp -name Statement -o Statement.shlb.CFM68K :Obj:alloca.c.CFM68K.o :Obj:sql_yacc.c.CFM68K.o :Obj:sql_data.c.CFM68K.o :Obj:sql_op.c.CFM68K.o :Obj:Statement.c.CFM68K.o ::::PerlStub 								{MWPPCLibraries}InterfaceLib 						"Bird:Metrowerks:MPW:MPW:Libraries:OldMW68KLibraries:"ShLibRuntimeCFM68K.Lib    	"Bird:Metrowerks:MPW:MPW:Libraries:OldMW68KLibraries:ANSI (N/4i/8d) C.CFM68K.Lib" `::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' 68K ` `::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep($_ !~ /$pat/, @ARGV)), "\"\n";' '68K|PPC' `
+::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);' :blib:lib:MacPPC:auto:SQL:Statement: :blib:lib:MacCFM68K:auto:SQL:Statement:
+Duplicate -y Statement.shlb.PPC :blib:lib:MacPPC:auto:SQL:Statement:Statement
+Duplicate -y Statement.shlb.CFM68K :blib:lib:MacCFM68K:auto:SQL:Statement:Statement
+::::PerlInstall -l ::::lib:
+::::PerlInstall -l "Bird:MacPerl Ä:site_perl:"
+
+ Set Echo 1
+ ::::InstallBLIB "SQL::Statement" "::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);'" :lib:SQL:Eval.pm :lib:SQL:Statement.pm :lib:SQL:Statement:Hash.pm Statement.xs
+  Perl -Sx "::::InstallBLIB" "SQL::Statement" "::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);'" ":lib:SQL:Eval.pm" ":lib:SQL:Statement.pm" ":lib:SQL:Statement:Hash.pm" "Statement.xs" > InstallBLIB.cmd
+Skipping :Statement.xs, which doesn't contain any pod.
+  InstallBLIB.cmd
+   ::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);' :blib:lib:SQL:SQL: :blib:lib:SQL:SQL:Statement:
+   Entab -t 0 :lib:SQL:Eval.pm > :blib:lib:SQL:SQL:Eval.pm
+   Entab -t 0 :lib:SQL:Statement.pm > :blib:lib:SQL:SQL:Statement.pm
+   Entab -t 0 :lib:SQL:Statement:Hash.pm > :blib:lib:SQL:SQL:Statement:Hash.pm
+  delete InstallBLIB.cmd
+  Exit
+ Set Echo 0
+ If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c :sql_yacc.c" != "" É End
+  MWCPPC -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -traceback -opt all -t -ext .PPC.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c :sql_yacc.c -o :Obj:
+Time to compile 'alloca.c': 0.05 seconds
+Time to compile 'sql_yacc.c': 0.95 seconds
+Time to compile 'sql_data.c': 0.10 seconds
+Time to compile 'sql_op.c': 0.10 seconds
+### MWCPPC Compiler Warning:
+#	typedef int ssize_t;  /* count of bytes or error indication */
+#	                   ^
+# identifier 'ssize_t' redeclared
+#----------------------------------------------------------
+File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # while compiling ":Statement.c"
+#----------------------------------------------------------
+### MWCPPC Compiler Warning:
+#	}
+#	^
+# return value expected
+#----------------------------------------------------------
+File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
+#----------------------------------------------------------
+Time to compile 'Statement.c': 1.68 seconds
+Time to compile 'sql_yacc.c': 1.05 seconds
+  end
+  ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' PPC
+ MWLinkPPC -xm sharedlibrary -sym on -msg nodup -@export Statement.exp -name Statement -o Statement.shlb.PPC :Obj:alloca.c.PPC.o :Obj:sql_yacc.c.PPC.o :Obj:sql_data.c.PPC.o :Obj:sql_op.c.PPC.o :Obj:Statement.c.PPC.o ::::PerlStub Bird:Metrowerks:MPW:Interfaces&Libraries:Libraries:MWPPCLibraries:InterfaceLib Bird:Metrowerks:MPW:Interfaces&Libraries:Libraries:MWPPCLibraries:MathLib "Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:"ShLibRuntime.Lib "Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:ANSI (NL) C.PPC.Lib" "Bird:Metrowerks:MPW:MPW:Libraries:OldMWPPCLibraries:MWCRuntime.Lib" ""
+ Set Echo 0
+ If " :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c :sql_yacc.c" != "" É End
+  MWC68K -nosyspath -sym on -d MULTIPLICITY -w nounusedarg -i- -i : -i ":::::sfio:"include: -i ":::::GUSI:"include: -i "Bird:Metrowerks:MPW:MPW:Interfaces:OldMWCIncludes:" -i ":::::IC:" -i ":::::AEGizmos:"include: -i ":::::db:"include -i ":::::perl:ext:GD:libgd:" -i ":::::XL:" -i :::: -i- -i : -w nopossible -indirect -mc68020 -model CFMflatdf -pragma "export on" -model far -opt off -t -ext .CFM68K.o :alloca.c :sql_yacc.c :sql_data.c :sql_op.c :Statement.c :sql_yacc.c -o :Obj:
+Time to compile 'alloca.c': 0.02 seconds
+Time to compile 'sql_yacc.c': 0.25 seconds
+Time to compile 'sql_data.c': 0.03 seconds
+Time to compile 'sql_op.c': 0.08 seconds
+### MWC68K Compiler Warning:
+#	typedef int ssize_t;  /* count of bytes or error indication */
+#	                   ^
+# identifier 'ssize_t' redeclared
+#----------------------------------------------------------
+File "Bird:src:macperl build:MacPerl_Src.520:GUSI:include:unistd.h"; Line 59; # while compiling ":Statement.c"
+#----------------------------------------------------------
+### MWC68K Compiler Warning:
+#	}
+#	^
+# return value expected
+#----------------------------------------------------------
+File "Bird:src:macperl build:MacPerl_Src.520:perl:ext:SQL:Statement:Statement.xs"; Line 37; # while compiling ":Statement.c"
+#----------------------------------------------------------
+Time to compile 'Statement.c': 1.77 seconds
+Time to compile 'sql_yacc.c': 0.25 seconds
+  end
+  ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep(/$pat/, @ARGV)), "\"\n";' 68K
+  ::::miniperl -e '$pat = shift @ARGV; print "\"", join("\"\n\"", grep($_ !~ /$pat/, @ARGV)), "\"\n";' '68K|PPC'
+ MWLink68K -xm sharedlibrary -sym on -msg nodup -@export Statement.exp -name Statement -o Statement.shlb.CFM68K :Obj:alloca.c.CFM68K.o :Obj:sql_yacc.c.CFM68K.o :Obj:sql_data.c.CFM68K.o :Obj:sql_op.c.CFM68K.o :Obj:Statement.c.CFM68K.o ::::PerlStub Bird:Metrowerks:MPW:Interfaces&Libraries:Libraries:MWPPCLibraries:InterfaceLib "Bird:Metrowerks:MPW:MPW:Libraries:OldMW68KLibraries:"ShLibRuntimeCFM68K.Lib "Bird:Metrowerks:MPW:MPW:Libraries:OldMW68KLibraries:ANSI (N/4i/8d) C.CFM68K.Lib" "" ""
+ ::::miniperl -e 'use File::Path; mkpath(\@ARGV, 1);' :blib:lib:MacPPC:auto:SQL:Statement: :blib:lib:MacCFM68K:auto:SQL:Statement:
+mkdir :blib:lib:MacPPC
+mkdir :blib:lib:MacPPC:auto
+mkdir :blib:lib:MacPPC:auto:SQL
+mkdir :blib:lib:MacPPC:auto:SQL:Statement:
+mkdir :blib:lib:MacCFM68K
+mkdir :blib:lib:MacCFM68K:auto
+mkdir :blib:lib:MacCFM68K:auto:SQL
+mkdir :blib:lib:MacCFM68K:auto:SQL:Statement:
+ Duplicate -y Statement.shlb.PPC :blib:lib:MacPPC:auto:SQL:Statement:Statement
+ Duplicate -y Statement.shlb.CFM68K :blib:lib:MacCFM68K:auto:SQL:Statement:Statement
+ ::::PerlInstall -l ::::lib:
+  Set Exit 0
+   Which bigperl ³ Dev:Null
+  if "" != "" É End
+   Else
+   Perl -Sx "::::PerlInstall" "-l" "::::lib:"
+	:MacCFM68K:auto:SQL:Statement:Statement -> Bird:src:macperl build:MacPerl_Src.520:perl:lib:MacCFM68K:auto:SQL:Statement
+	:MacPPC:auto:SQL:Statement:Statement -> Bird:src:macperl build:MacPerl_Src.520:perl:lib:MacPPC:auto:SQL:Statement
+	:SQL:SQL:Eval.pm     -> Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL
+AutoSplit skipped Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL:Eval.pm: no AutoLoader used
+	:SQL:SQL:Statement:Hash.pm -> Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL:Statement
+AutoSplit skipped Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL:Statement:Hash.pm: no AutoLoader used
+	:SQL:SQL:Statement.pm -> Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL
+AutoSplit skipped Bird:src:macperl build:MacPerl_Src.520:perl:lib:SQL:SQL:Statement.pm: no AutoLoader used
+   Exit 0
+ ::::PerlInstall -l "Bird:MacPerl Ä:site_perl:"
+  Set Exit 0
+   Which bigperl ³ Dev:Null
+  if "" != "" É End
+   Else
+   Perl -Sx "::::PerlInstall" "-l" "Bird:MacPerl Ä:site_perl:"
+	:MacCFM68K:auto:SQL:Statement:Statement -> Bird:src:Pudge:pudgeprogs:perl:site_specific:MacCFM68K:auto:SQL:Statement
+	:MacPPC:auto:SQL:Statement:Statement -> Bird:src:Pudge:pudgeprogs:perl:site_specific:MacPPC:auto:SQL:Statement
+	:SQL:SQL:Eval.pm     -> Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL
+mkdir Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL
+Warning: AutoSplit had to create top-level Bird:src:Pudge:pudgeprogs:perl:site_specific:auto:SQL:SQL unexpectedly.
+AutoSplit skipped Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL:Eval.pm: no AutoLoader used
+	:SQL:SQL:Statement:Hash.pm -> Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL:Statement
+mkdir Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL:Statement
+Warning: AutoSplit had to create top-level Bird:src:Pudge:pudgeprogs:perl:site_specific:auto:SQL:SQL:Statement unexpectedly.
+AutoSplit skipped Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL:Statement:Hash.pm: no AutoLoader used
+	:SQL:SQL:Statement.pm -> Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL
+AutoSplit skipped Bird:src:Pudge:pudgeprogs:perl:site_specific:SQL:SQL:Statement.pm: no AutoLoader used
+   Exit 0
